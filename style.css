@@ -1,0 +1,46 @@
+	body {
+		font-family : "Trebuchet MS", Helvetica, sans-serif;
+		font-size: 36px;
+		color : white;
+		background-image: url('ChalkBoard.jpg');
+		background-size:cover;
+		
+	}
+	input {
+		width: 150px;
+		font-size:28px;
+		text-align:right;
+	}
+	table {
+	  border-spacing: 0px 0px;
+	  margin: auto;
+	}
+	td {
+		width: 150px;
+		font-size:36px;
+		text-align: right;
+	}
+	.lb {
+		border-left: 1px solid white;
+	}
+	.tb {
+		border-top: 1px solid white;
+	}
+	.bb {
+		border-bottom: 1px solid white;
+	}
+	.rb {
+		border-right: 1px solid white;
+	}
+	.red {
+		color : red;
+	}
+	.blue {
+		color : cyan;
+	}
+	.yellow {
+		color : yellow;
+	}
+	.magenta {
+		color : magenta;
+	}

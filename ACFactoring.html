@@ -1,0 +1,131 @@
+<html>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+<script>
+	function findRoots(A,B,C)
+	{
+		var AC = A*C;
+		var halfway = Math.abs(AC)/2;
+		var root1 = 0;
+		var root2 = 0;
+		
+		for( var i=1; i<= halfway; i++ )
+		{
+			if( AC < 0 ) 
+			{
+				if( B < 0 )
+				{
+					root1 = i;
+					root2 = AC / i;
+				}
+				else 
+				{
+					root1 = -1 * i;
+					root2 = -1 * AC / i ;
+				}
+			}
+			else 
+			{
+				if( B < 0 )
+				{
+					root1 = -1 * i;
+					root2 = -1 * AC/i
+				}
+				else
+				{
+					root1 = i;
+					root2 = AC/i;
+				}
+			}
+			if( root1 + root2 == B )
+				return new Array( root1, root2 );
+		}
+		return null;
+	}
+	function findFactor(f1, f2)
+	{
+		var a = Math.abs(f1);
+		var b = Math.abs(f2);
+		var smallest = a < b ? a : b;
+		var gcf = 1;
+		for(var i=1; i<=smallest; i++)
+			if( a % i == 0 && b % i == 0 )
+				gcf = i;
+		if( f1 < 0 )
+			gcf=-1*gcf;
+		return new Array(gcf, f1/gcf, f2/gcf );
+	}	
+	function buildFactor(a,b)
+	{
+		var ret = "( " + a + "x ";
+			ret += b > 0 ? " + " : " &minus; " 
+			ret += Math.abs(b) + " )"; 
+		return  ret;
+	}
+	function calculate() 
+	{
+		
+		var A = document.getElementById("A").value;
+		var B = document.getElementById("B").value;
+		var C = document.getElementById("C").value;
+		
+		var roots = findRoots(A,B,C);
+		if( roots != null )
+		{
+			if( A == 1 )
+			{
+				document.getElementById("results").innerHTML = "( x + " + roots[0] + " )( x + " + roots[1] + " )" ;
+			}
+			else
+			{
+				var html = "Original Trinomial<br><span class=red>" + A + "</span>x<sup>2</sup>" ;
+				html += B > 0 ? " + " : " &minus; " ;
+				html += "<span class=magenta>" + Math.abs(B) + "</span>x";
+				html += C > 0 ? " <span class=magenta>+</span> " : " <span class=magenta>&minus;</span> ";
+				html += "<span class=blue>" + Math.abs(C) + "</span><br>";
+				html += "Step 1: find AC<br>";
+				html += "<span class=red>A</span><span class=blue>C</span> = " + Math.abs(A * C) + "<br>" ;
+				html += "Step 2:  The Factors of " + Math.abs(A * C) + " that " ;
+				html += A*C > 0 ? " <span class=magenta>add</span> " : " <span class=magenta>substract</span> ";
+				html += "to <span class=magenta>" + B + "</span> are <span class=yellow>" + roots[0] + "</span> and <span class=yellow>" + roots[1] + "</span><br>";
+				html += "( <span class=red>" + A + "</span>x<sup>2</sup> " ;
+				html += roots[0] > 0 ? " + " : " &minus; " ;
+				html +=	"<span class=yellow>" + Math.abs(roots[0]) + "</span>x ) " ;
+				html += "+ ( <span class=yellow>" + roots[1] +"</span>x";
+				html += C > 0 ? " + "  : " &minus; " ;
+				html +=	"<span class=blue>" + Math.abs(C) + "</span> )<br>";
+				html += "Step 3: Undistribute from each term<br>";
+				var res1 = findFactor( A, roots[0] );
+				var res2 = findFactor( roots[1], C );
+				html += res1[0] + "x" + buildFactor( res1[1], res1[2] );
+				html += res2[0] > 0 ? " + " : " &minus; ";
+				html += Math.abs(res2[0]) + buildFactor( res2[1], res2[2] ) + "<br>";
+				html += "Step 4: Undistribute common term<br>";
+				html += buildFactor(res1[1], res1[2] ) + buildFactor( res1[0], res2[0] );
+			
+
+				document.getElementById("results").innerHTML = html;	
+			}
+		}
+		else
+			document.getElementById("results").innerHTML = "Not Factorable!  You must use quadratic formula";	
+	}
+</script>
+<body>
+	<div style="text-align:center;"> Factoring using the AC Method</div>
+
+<table>
+<tr>
+	<td><input id=A /></td>
+	<td style="width:20px">x<sup>2</sup>&nbsp+&nbsp;</td>
+	<td><input id=B /></td>
+	<td style="width:20px">x&nbsp;+&nbsp;</td>
+	<td><input id=C></input></td>
+</tr>
+</table>
+<table>
+<tr><td><button onClick="calculate();">Calculate</button></td></tr>
+</table>
+<div id=results></div>
+</body>
+</html>
