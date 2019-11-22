@@ -1,0 +1,264 @@
+<hmtl>
+<script src="scripts/RPNEngine.js"></script>
+<script src="scripts/MathEngine.js"></script>
+
+<script>
+function plotPoint(y,x,z,color)
+{
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	var scale = parseInt( document.getElementById("scale").value );
+
+	
+	if( color==null )
+		color="red";
+	
+	if( y != 0 )
+	{
+		x += 3/4*y;
+		y = -3/4*y;
+	}
+	if( z != 0 )
+	{
+		y -= z;
+	}
+	ctx.beginPath();
+	ctx.arc(x*scale, y*scale, 2, 0,2*Math.PI);
+	ctx.fillStyle=color;
+	ctx.fill();
+	ctx.closePath();
+}
+function plotLine(x1,y1,z1, x2, y2, z2, mode)
+{
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	var scale = parseInt( document.getElementById("scale").value );
+	var color = "red";
+	
+	
+	if( y1 != 0 )
+	{
+		x1 += 3/4*y1;
+		y1 = -3/4*y1;
+	}
+	if( z1 != 0 )
+	{
+		y1 -= z1;
+	}
+	if( y2 != 0 )
+	{
+		x2 += 3/4*y2;
+		y2 = -3/4*y2;
+	}
+	if( z2 != 0 )
+	{
+		y2 -= z2;
+	}
+	ctx.strokeStyle=color;
+	if( mode==null)
+	{
+		ctx.beginPath();
+		ctx.moveTo(x1*scale,y1*scale);
+		ctx.lineTo(x2*scale,y2*scale);
+		ctx.closePath();
+		ctx.stroke();
+		ctx.fill();
+		return;
+	}
+	if( mode=="start" )
+	{
+		ctx.beginPath();
+		ctx.moveTo(x1*scale,y1*scale);
+	}
+	ctx.lineTo(x2*scale,y2*scale);
+	if( mode=="fill")
+	{
+		ctx.globalAlpha=1;
+		ctx.stroke();
+		ctx.globalAlpha=.3;
+		ctx.closePath();
+		ctx.fill();
+	}
+}
+function drawAxis()
+{
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	var scale = parseInt( document.getElementById("scale").value );
+	
+	ctx.font="20px Georgia";
+	ctx.strokeStyle="black";
+	ctx.resetTransform();
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	ctx.translate(500,500);
+
+	// draw x
+	ctx.beginPath();
+	ctx.moveTo(0,0);
+	ctx.lineTo(400,0);
+	ctx.stroke();
+	// x tick marks
+	for(var idx=scale; idx<=400; idx+=scale)
+	{
+		ctx.rect(idx,-5,1,10);
+		ctx.stroke();
+	}
+	ctx.strokeText("x",420,0);
+	// draw z
+	ctx.moveTo(0,0);
+	ctx.lineTo(0,-400);
+	ctx.stroke();
+	for(var idx=-1*scale; idx>=-400; idx-=scale)
+	{
+		ctx.rect(-5, idx,10,1);
+		ctx.stroke();
+	}
+	ctx.strokeText("z",0,-420);
+	// draw x
+	ctx.moveTo(0,0);
+	ctx.lineTo(300, -300);
+	ctx.stroke();
+	for(var idx=scale; idx<=400; idx+=scale)
+	{
+		ctx.rect(3/4*idx,-3/4*idx-5,1,10);
+		ctx.stroke();
+	}
+
+	ctx.strokeText("y",320,-320);
+	ctx.closePath();
+}
+function init()
+{
+	MthEngine = new MathEngine();
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	var scale = parseInt( document.getElementById("scale").value );
+	drawAxis();
+}
+function drawEquations()
+{
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	var lb = parseInt( document.getElementById("lb").value );
+	var ub = parseInt( document.getElementById("ub").value );
+	var scale = parseInt( document.getElementById("scale").value );
+
+	var equ1 = document.getElementById("f").value;
+	for( var y = lb; y<=ub; y+=.01 )
+	{
+		var mthEqu = equ1.replace(/y/g, "(" + y + ")");
+		plotPoint(y, MathEngine.doMath(mthEqu), 0, "green");
+	}
+	var equ2 = document.getElementById("g").value;
+	for( var y = lb; y<=ub; y+=.01 )
+	{
+		var mthEqu = equ2.replace(/y/g, "(" + y + ")");
+		plotPoint(y, MathEngine.doMath(mthEqu), 0, "blue");
+	}
+}
+function animate(lastY)
+{
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	var lb = parseInt( document.getElementById("lb").value );
+	var ub = parseInt( document.getElementById("ub").value );
+	var scale = parseInt( document.getElementById("scale").value );
+
+	var equ1 = document.getElementById("f").value;
+	var equ2 = document.getElementById("g").value;
+
+	if( lastY < lb )
+	{
+		document.getElementById("graphBtn").disabled=false;
+		return;
+	}
+	// Draw Squares
+	if( document.getElementById("square").checked )
+	{
+		var ex= MathEngine.doMath( equ1.replace(/y/g, "(" + lastY + ")") );
+		var sx= MathEngine.doMath( equ2.replace(/y/g, "(" + lastY + ")") );
+		var dist = Math.abs(sx - ex);
+		
+		plotLine(sx, lastY, 0,    sx, lastY, dist, "start");
+		plotLine(sx, lastY, dist, ex, lastY, dist, "" );
+		plotLine(ex, lastY, dist, ex, lastY, 0,    "" );
+		plotLine(ex, lastY, 0, 	  sx, lastY, 0,    "fill" );
+		document.getElementById("integral").innerHTML = "&int; (f-g)<sup>2</sup> dy";
+	}
+	// Draw Triangles
+	else if( document.getElementById("triangle").checked )
+	{
+		var ex= MathEngine.doMath( equ1.replace(/y/g, "(" + lastY + ")") );
+		var sx= MathEngine.doMath( equ2.replace(/y/g, "(" + lastY + ")") );
+		var dist = Math.abs(sx - ex);
+		
+		plotLine(sx, lastY, 0, sx + dist/2, lastY, dist, "start" );
+		plotLine(sx + dist/2, lastY, dist, ex, lastY, 0, "" );
+		plotLine(ex, lastY, 0, sx, lastY, 0, "fill" );
+		document.getElementById("integral").innerHTML = "&int; (f-g)<sup>2</sup> dy";
+	}
+	else if (  document.getElementById("circle").checked )
+	{
+		var ex= MathEngine.doMath( equ1.replace(/y/g, "(" + lastY + ")") );
+		var sx= MathEngine.doMath( equ2.replace(/y/g, "(" + lastY + ")") );
+		var mp = (ex + sx) / 2;
+		
+		var dist = Math.abs(sx - ex);
+		var equ3 = "(" + (dist/2 * dist/2) + "-(x-" + mp + ")^2)^(1/2)";
+
+		for( var x = sx; x<ex; x+=.001 )
+		{
+			var mthEqu = equ3.replace(/x/g, "(" + x + ")");
+			var z = MathEngine.doMath(mthEqu);
+			plotPoint(lastY, x, z , "orange");
+		}
+		plotLine(ex, lastY, 0, sx, lastY, 0);
+		
+		document.getElementById("integral").innerHTML = "1/2 &int; &pi;[(f-g)/2]^2 = &pi;/8 &int; (f-g)<sup>2</sup> dy";
+	}
+
+	setTimeout(animate, 500, lastY - .1);
+}
+function graph()
+{
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	var lb = parseInt( document.getElementById("lb").value );
+	var ub = parseInt( document.getElementById("ub").value );
+
+	drawAxis();
+	drawEquations();
+
+	document.getElementById("graphBtn").disabled=true;
+	animate(ub);
+}
+</script>
+
+
+<body onload="init();">
+<table> 
+<h2> Volume of a known Cross Section Perp to Y.  <a href="Vol of known crossection.html">(Click for Perp to X axis)</a> Directions:</h2>
+<h3>Equations must be entered correctly:</h3>
+&nbsp; ex:  2y must be typed as 2*y  and "y" must be lower case<br>
+&nbsp; ex:  &radic;(y-2) must be typed as (y-2)^(1/2) with () around the exponent<br><br>
+<tr><td align=right>f(y): x=</td><td><input id=f /></td></tr>
+<tr><td align=right>g(y): x=</td><td><input id=g value=0></td></tr>
+<tr><td>Cross Section:</td>
+	<td><form>
+		<input type=radio name=xsect id=square checked>Square</input>
+		<input type=radio name=xsect id=triangle>Triangle</input>
+		<input type=radio name=xsect id=circle>Semi-circle</input>
+		</form>
+	</td>
+</tr>
+<tr><td align=right>Lower Bound: y=</td><td><input id=lb value=0></input></td></tr>
+<tr><td align=right>Upper Bound: y=</td><td><input id=ub value=2></input></td></tr>
+<tr><td align=right>Scale:</td><td><input id=scale value=50></input></td></tr>
+
+<tr><td align=right>Integral:</td><td id=integral></td></tr>
+<tr><td><button id=graphBtn onclick="graph();">Graph</button></td><td></td></tr>
+</table>
+<canvas style="position:absolute; top:100px; left:110px; z-index:-1" id=myCanvas width=1000 height=800>
+</canvas>
+</body>
+</html>

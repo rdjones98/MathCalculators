@@ -1,0 +1,202 @@
+<hmtl>
+<style>
+	body { font-size : 20px; }
+</style>
+<script src="scripts/RPNEngine.js"></script>
+<script src="scripts/MathEngine.js"></script>
+
+<script>
+var transform=5;
+function plotPoint(y,x,z,color, opacity)
+{
+	var scale = parseInt( document.getElementById("scale").value );
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	if( color==null )
+		color="red";
+	if( opacity==null)
+		opacity=1;
+		
+	ctx.globalAlpha=opacity;
+	ctx.beginPath();
+	ctx.arc(x*scale, y*-1*scale, 2, 0,2*Math.PI);
+	ctx.fillStyle=color;
+	ctx.fill();
+}
+function drawAxis()
+{
+
+	var scale = parseInt( document.getElementById("scale").value );
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	
+	
+	ctx.font="20px Georgia";
+	ctx.strokeStyle="black";
+	ctx.resetTransform();
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	ctx.translate(500,500);
+
+	ctx.lineWidth=1;
+
+	// draw x
+	ctx.moveTo(0,0);
+	ctx.lineTo(400,0);
+	ctx.stroke();
+	
+	// x tick marks
+	for(var idx=scale; idx<=400; idx+=scale)
+	{
+		ctx.rect(idx,-5,1,10);
+		ctx.stroke();
+	}
+	ctx.strokeText("x",420,0);
+	
+	// draw y
+	ctx.moveTo(0,0);
+	ctx.lineTo(0,-400);
+	ctx.stroke();
+	for(var idx=-1*scale; idx>=-400; idx-=scale)
+	{
+		ctx.rect(-5, idx,10,1);
+		ctx.stroke();
+	}
+	ctx.strokeText("y",0,-420);
+	// draw z
+	ctx.moveTo(0,0);
+	ctx.lineTo(300, -300);
+	ctx.stroke();
+	for(var idx=scale; idx<=400; idx+=scale)
+	{
+		ctx.rect(3/4*idx,-3/4*idx-5,1,10);
+		ctx.stroke();
+	}
+
+	ctx.strokeText("z",320,-320);
+
+}
+function init()
+{
+	MthEngine = new MathEngine();
+	var scale = parseInt( document.getElementById("scale").value );
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+
+	drawAxis();
+}
+function animate(lastY)
+{
+
+	var scale = parseInt( document.getElementById("scale").value );
+
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	var ub = parseInt( document.getElementById("ub").value );
+	if( lastY > ub )
+	{
+		//reset transform
+		ctx.transform(1,0,0,transform,0,0);
+
+		drawEquations(0.2);
+		document.getElementById("graphBtn").disabled=false;
+		return;
+	}
+	var f = document.getElementById("f").value;
+	var g = document.getElementById("g").value;
+	var rotAround = document.getElementById("rotateAround").value;
+
+	var frad= MathEngine.doMath( f.replace(/y/g, "(" + lastY + ")") ) *scale;
+	var grad= MathEngine.doMath( g.replace(/y/g, "(" + lastY + ")") ) *scale;
+	
+	frad = Math.abs( Math.abs(frad)-rotAround*scale );
+	grad = Math.abs( Math.abs(grad)-rotAround*scale );
+	
+	ctx.globalAlpha=1;
+	ctx.strokeStyle="black";
+	ctx.lineWidth=10;
+	ctx.beginPath();
+	ctx.arc(rotAround*scale, -1*lastY*transform*scale, frad, 0,2*Math.PI);
+	ctx.stroke();
+	ctx.globalAlpha=0.4;
+	ctx.fillStyle = "red";
+	ctx.fill();
+	
+	ctx.globalAlpha=1;
+	ctx.strokeStyle="blue";
+	ctx.beginPath();
+	ctx.arc(rotAround*scale, -1*lastY*transform*scale, grad, 0,2*Math.PI);
+	ctx.stroke();
+	ctx.globalAlpha=.4;
+	ctx.fillStyle = "lightblue";
+	ctx.fill();
+	
+	setTimeout(animate, 500, lastY + .1);
+}
+
+function drawEquations( opacity, reflection)
+{
+	if ( opacity == null )
+		opacity = 1;
+	if ( reflection == null )
+		reflection = 1;
+		
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	var lb = parseInt( document.getElementById("lb").value );
+	var ub = parseInt( document.getElementById("ub").value );
+
+
+	var f = document.getElementById("f").value;
+	var g = document.getElementById("g").value;
+	var rotAround = document.getElementById("rotateAround").value;
+	for( var x = lb; x<ub; x+=.01 )
+	{
+		// plot f
+		var mthEqu = f.replace(/y/g, "(" + x + ")");
+		plotPoint(x, MathEngine.doMath(mthEqu) * reflection, 0, "red", opacity);
+		
+		// plot g
+		var mthEqu = g.replace(/y/g, "(" + x + ")");
+		plotPoint(x, MathEngine.doMath(mthEqu) * reflection, 0, "blue",opacity);
+		
+		// plot rotate around
+		plotPoint(x, rotAround, 0, "green",opacity);
+	}
+
+}
+function graph()
+{
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	var lb = parseInt( document.getElementById("lb").value );
+	var ub = parseInt( document.getElementById("ub").value );
+
+	drawAxis();
+	drawEquations();
+
+	ctx.transform(1,0,0,1/transform,0,0);
+	document.getElementById("graphBtn").disabled=true;
+	animate(lb);
+}
+</script>
+
+
+<body onload="init();">
+<h2> Revolve around Y axis.  <a href="Vol of Rotation.html">(Click for Revolve around X axis)</a> Directions:</h2>
+<h3>Equations must be entered correctly:</h3>
+&nbsp; ex:  2y must be typed as 2*y  and "y" must be lower case<br>
+&nbsp; ex:  &radic;(y-2) must be typed as (y-2)^(1/2) with () around the exponent<br><br>
+<table> 
+<tr><td align=right>f(x): x=</td><td><input id=f /></td></tr>
+<tr><td align=right>g(x): x=</td><td><input id=g /></td></tr>
+<tr><td align=right>Lower Bound: y=</td><td><input id=lb value=0></input></td></tr>
+<tr><td align=right>Upper Bound: y=</td><td><input id=ub value=2></input></td></tr>
+<tr><td align=right>Rotate Around x=</td><td><input id=rotateAround value=0></input></td></tr>
+<tr><td align=right>Scale:</td><td><input id=scale value=50></input></td></tr>
+<tr><td align=right>Integral:</td><td>&pi; &int; [f(x)]<sup>2</sup> - [g(x)]<sup>2</sup> dy</td></tr>
+<tr><td><button id=graphBtn onclick="graph();">Graph</button></td><td></td></tr>
+</table>
+<canvas style="position:absolute; top:100px; z-index:-1" id=myCanvas width=1000 height=800>
+</canvas>
+</body>
+</html>
