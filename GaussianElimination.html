@@ -62,7 +62,7 @@ function v(id)
 	else
 		return new Frac( val, 1 );
 }
-function printArray( anArray, msg )
+function printArray( anArray, msg, row )
 {
 	var html = document.getElementById("res").innerHTML;
 	if( msg !== "undefined" )
@@ -94,7 +94,10 @@ function printArray( anArray, msg )
 			}
 			else
 				html += "<td>"
-			html += anArray[i][j].toFrac() +"</td>" ;
+			if( row != null & row == i )
+				html += "<td class=red>" + anArray[i][j].toFrac() +"</td></td>" ;
+			else				
+				html += anArray[i][j].toFrac() +"</td>" ;
 		}
 		html += "</tr>";
 	}
