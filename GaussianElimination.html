@@ -143,28 +143,28 @@ function calculate2x2(m)
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].dividedBy( m11 );
 	
-	printArray(m, "Step 1: r1/m<sub>11</sub> -> r1" );
+	printArray(m, "Step 1 (1 in m<sub>11</sub>): r1/m<sub>11</sub> -> r1" );
 
 	// Do Step 2
 	var m21 = m[1][0];
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m21.times( m[0][i] ).minus(m[1][i]) ;
 	
-	printArray(m, "Step 2: m<sub>21</sub>*r1 - r2 -> r2" );
+	printArray(m, "Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r1 - r2 -> r2" );
 	
 	// Do Step 3
 	var m22 = m[1][1];
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m[1][i].dividedBy( m22 );
 
-	printArray(m, "Step 3: r2/m<sub>22</sub> -> r2" );
+	printArray(m, "Step 3 (1 in m<sub>22</sub>): r2/m<sub>22</sub> -> r2" );
 	
 	// Do Step 4
 	var m12 = m[0][1];
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].minus( m12.times( m[1][i] ) );
 	
-	printArray(m, "Step 4: r1 - m<sub>12</sub>*r2 -> r1" );
+	printArray(m, "Step 4 (0 in m<sub>12</sub>): r1 - m<sub>12</sub>*r2 -> r1" );
 
 
 }
@@ -179,14 +179,14 @@ function calculate3x3(m)
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].dividedBy( m11 );
 	
-	printArray(m, "Step 1: r1/m<sub>11</sub> -> r1" );
+	printArray(m, "Step 1 (1 in m<sub>11</sub>): r1/m<sub>11</sub> -> r1" );
 
 	// Do Step 2
 	var m21 = m[1][0];
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m21.times( m[0][i] ).minus(m[1][i]) ;
 	
-	printArray(m, "Step 2: m<sub>21</sub>*r1 - r2 -> r2" );
+	printArray(m, "Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r1 - r2 -> r2" );
 	
 
 	// Do Step 3
@@ -194,7 +194,7 @@ function calculate3x3(m)
 	for( var i=0; i<m[1].length; i++ )
 		m[2][i] = m31.times( m[0][i] ).minus(m[2][i]) ;
 	
-	printArray(m, "Step 3: m<sub>31</sub>*r1 - r3 -> r3" );
+	printArray(m, "Step 3 (0 in m<sub>31</sub>): m<sub>31</sub>*r1 - r3 -> r3" );
 
 	
 	// Do Step 4
@@ -207,7 +207,7 @@ function calculate3x3(m)
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m[1][i].dividedBy( m22 );
 
-	printArray(m, "Step 4: r2/m<sub>22</sub> -> r2" );
+	printArray(m, "Step 4 (1 in m<sub>22</sub>): r2/m<sub>22</sub> -> r2" );
 
 	
 	// Do Step 5
@@ -215,7 +215,7 @@ function calculate3x3(m)
 	for( var i=0; i<m[1].length; i++ )
 		m[2][i] = m32.times( m[1][i] ).minus(m[2][i]) ;
 	
-	printArray(m, "Step 5: m<sub>32</sub>*r2 - r3 -> r3" );
+	printArray(m, "Step 5 (0 in m<sub>32</sub>): m<sub>32</sub>*r2 - r3 -> r3" );
 
 	
 	// Do Step 6
@@ -223,7 +223,7 @@ function calculate3x3(m)
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].minus( m12.times( m[1][i] ) );
 	
-	printArray(m, "Step 6: r1 - m<sub>12</sub>*r2 -> r1" );
+	printArray(m, "Step 6 (0 in m<sub>12</sub>): r1 - m<sub>12</sub>*r2 -> r1" );
 
 
 	// Do Step 7
@@ -236,14 +236,14 @@ function calculate3x3(m)
 	for( var i=0; i<m[2].length; i++ )
 		m[2][i] = m[2][i].dividedBy( m33 );
 
-	printArray(m, "Step 7: r3/m<sub>33</sub> -> r3" );
+	printArray(m, "Step 7 (1 in m<sub>33</sub>): r3/m<sub>33</sub> -> r3" );
 
 	// Do Step 8
 	var m23 = m[1][2];
 	for( var i=0; i<m[2].length; i++ )
 		m[1][i] = m[1][i].minus( m23.times( m[2][i] ) );
 	
-	printArray(m, "Step 8: r2 - m<sub>23</sub>*r3 -> r2" );
+	printArray(m, "Step 8 (0 in m<sub>23</sub>): r2 - m<sub>23</sub>*r3 -> r2" );
 
 	
 	// Do Step 9
@@ -251,7 +251,7 @@ function calculate3x3(m)
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].minus( m13.times( m[2][i] ) ) ;
 	
-	printArray(m, "Step 9: r1 - m<sub>13</sub>*r3 -> r1" );
+	printArray(m, "Step 9 (0 in m<sub>13</sub>): r1 - m<sub>13</sub>*r3 -> r1" );
 }
 function chooseSize()
 {
