@@ -182,7 +182,7 @@ function calculate3x3(m)
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].dividedBy( m11 );
 	
-	printArray(m, "Step 1 (1 in m<sub>11</sub>): <table><tr><td>r<sub>1</sub></td></tr><tr><td>m<sub>11</sub></td></tr></table> &rarr; r<sub>1</sub>",1 );
+	printArray(m, "Step 1 (1 in m<sub>11</sub>): r<sub>1</sub>/m<sub>11</sub> &rarr; r<sub>1</sub>",1 );
 
 	// Do Step 2
 	var m21 = m[1][0];
