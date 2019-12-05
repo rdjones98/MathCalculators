@@ -67,8 +67,12 @@ function v(id)
 	else
 		return new Frac( val, 1 );
 }
-function printArray( anArray, msg, row, prevRow, aVal )
+function printArray( anArray, msg, row, onesRow, aVal , aColor, aNextColor )
 {
+	if (aColor == null )
+		aColor = "white";
+	if (aNextColor == null )
+		aNextColor = "white";
 	var html = document.getElementById("res").innerHTML;
 	if( msg !== "undefined" )
 		html += "<div style='text-align:center'><br>" + msg +"</div>";
@@ -77,8 +81,8 @@ function printArray( anArray, msg, row, prevRow, aVal )
 	for( var i=0; i<anArray.length; i++ )
 	{
 		html += "<tr><td>";
-		if( prevRow != null && (prevRow-1) == i )
-			html += "<font color='yellow'>" + aVal + "</font></td>";
+		if( onesRow != null && (onesRow-1) == i )
+			html += "<font color='" + aNextColor "'>" + aVal + "</font></td>";
 		else
 			html += "</td>";
 		
@@ -105,7 +109,7 @@ function printArray( anArray, msg, row, prevRow, aVal )
 			else
 				html += "<td>"
 			if( row != null & (row-1) == i )
-				html += "<font color='red'>" + anArray[i][j].toFrac() +"</font></td>" ;
+				html += "<font color='" + aColor + "'>" + anArray[i][j].toFrac() +"</font></td>" ;
 			else				
 				html += anArray[i][j].toFrac() +"</td>" ;
 		}
@@ -149,28 +153,28 @@ function calculate2x2(m)
 {
 	document.getElementById("res").innerHTML = "";
 					   
-	printArray(m, "initial matrix:",null,1,m[0][0].toRecipricolFrac());
+	printArray(m, "initial matrix:",null,1,m[0][0].toRecipricolFrac(), "white", "red" );
 	
 	// Do Step 1
 	var m11 = m[0][0];
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].dividedBy( m11 );
 	
-	printArray(m, "Step 1 (1 in m<sub>11</sub>): r<sub>1</sub>/m<sub>11</sub> &rarr; r<sub>1</sub>", 1 , 1, m[1][0].toFrac());
+	printArray(m, "Step 1 (1 in m<sub>11</sub>): r<sub>1</sub>/m<sub>11</sub> &rarr; r<sub>1</sub>", 1 , 1, m[1][0].toFrac(), "red", "yellow");
 
 	// Do Step 2
 	var m21 = m[1][0];
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m21.times( m[0][i] ).minus(m[1][i]) ;
 	
-	printArray(m, "Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub>", 2, 2, m[1][1].toRecipricolFrac());
+	printArray(m, "Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub>", 2, 2, m[1][1].toRecipricolFrac(), "yellow", "red");
 	
 	// Do Step 3
 	var m22 = m[1][1];
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m[1][i].dividedBy( m22 );
 
-	printArray(m, "Step 3 (1 in m<sub>22</sub>): r<sub>2</sub>/m<sub>22</sub> &rarr; r<sub>2</sub>", 2, 2, m[0][1].toFrac());
+	printArray(m, "Step 3 (1 in m<sub>22</sub>): r<sub>2</sub>/m<sub>22</sub> &rarr; r<sub>2</sub>", 2, 2, m[0][1].toFrac(), "red", "yellow");
 	
 	// Do Step 4
 	var m12 = m[0][1];
