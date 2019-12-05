@@ -62,7 +62,7 @@ function v(id)
 	else
 		return new Frac( val, 1 );
 }
-function printArray( anArray, msg, row )
+function printArray( anArray, msg, row, prevRow, aVal )
 {
 	var html = document.getElementById("res").innerHTML;
 	if( msg !== "undefined" )
@@ -71,9 +71,14 @@ function printArray( anArray, msg, row )
 	html +="<table>";
 	for( var i=0; i<anArray.length; i++ )
 	{
-		html += ("<tr>");
+		html += ("<tr><td>");
+		if( prevRow != null && (prevRow-1) == i )
+			html += "<font color='yellow'>" + aVal + "</font></td>
+		else
+			html += "</td>";
+		
 		for( var j=0; j<anArray[i].length; j++ )
-		{
+		{	
 			if( j==0 )
 			{
 				if( i==0 )
@@ -139,35 +144,35 @@ function calculate2x2(m)
 {
 	document.getElementById("res").innerHTML = "";
 					   
-	printArray(m, "initial matrix:");
+	printArray(m, "initial matrix:",null,1,m[0][0]);
 	
 	// Do Step 1
 	var m11 = m[0][0];
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].dividedBy( m11 );
 	
-	printArray(m, "Step 1 (1 in m<sub>11</sub>): r<sub>1</sub>/m<sub>11</sub> &rarr; r<sub>1</sub>",1 );
+	printArray(m, "Step 1 (1 in m<sub>11</sub>): r<sub>1</sub>/m<sub>11</sub> &rarr; r<sub>1</sub>",1 , m11);
 
 	// Do Step 2
 	var m21 = m[1][0];
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m21.times( m[0][i] ).minus(m[1][i]) ;
 	
-	printArray(m, "Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub>",2 );
+	printArray(m, "Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub>",2 ,m21);
 	
 	// Do Step 3
 	var m22 = m[1][1];
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m[1][i].dividedBy( m22 );
 
-	printArray(m, "Step 3 (1 in m<sub>22</sub>): r<sub>2</sub>/m<sub>22</sub> &rarr; r<sub>2</sub>" ,2);
+	printArray(m, "Step 3 (1 in m<sub>22</sub>): r<sub>2</sub>/m<sub>22</sub> &rarr; r<sub>2</sub>" ,2, m22);
 	
 	// Do Step 4
 	var m12 = m[0][1];
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].minus( m12.times( m[1][i] ) );
 	
-	printArray(m, "Step 4 (0 in m<sub>12</sub>): r<sub>1</sub> - m<sub>12</sub>*r<sub>2</sub> &rarr; r</sub>1</sub>",1 );
+	printArray(m, "Step 4 (0 in m<sub>12</sub>): r<sub>1</sub> - m<sub>12</sub>*r<sub>2</sub> &rarr; r</sub>1</sub>",1 , m12);
 
 
 }
