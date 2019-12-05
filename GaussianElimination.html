@@ -156,14 +156,14 @@ function calculate2x2(m)
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].dividedBy( m11 );
 	
-	printArray(m, "Step 1 (1 in m<sub>11</sub>): r<sub>1</sub>/m<sub>11</sub> &rarr; r<sub>1</sub>", 1 , m11);
+	printArray(m, "Step 1 (1 in m<sub>11</sub>): r<sub>1</sub>/m<sub>11</sub> &rarr; r<sub>1</sub>", 1 , 1, m[1][0].toFrac());
 
 	// Do Step 2
 	var m21 = m[1][0];
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m21.times( m[0][i] ).minus(m[1][i]) ;
 	
-	printArray(m, "Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub>", 1 ,m21);
+	printArray(m, "Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub>", 2, m21);
 	
 	// Do Step 3
 	var m22 = m[1][1];
@@ -177,7 +177,7 @@ function calculate2x2(m)
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].minus( m12.times( m[1][i] ) );
 	
-	printArray(m, "Step 4 (0 in m<sub>12</sub>): r<sub>1</sub> - m<sub>12</sub>*r<sub>2</sub> &rarr; r</sub>1</sub>", 2 , m12);
+	printArray(m, "Step 4 (0 in m<sub>12</sub>): r<sub>1</sub> - m<sub>12</sub>*r<sub>2</sub> &rarr; r</sub>1</sub>", 1 , m12);
 
 
 }
