@@ -167,21 +167,21 @@ function calculate2x2(m)
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m21.times( m[0][i] ).minus(m[1][i]) ;
 	
-	printArray(m, "Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub>", 2, 2, m[1][1].toRecipricolFrac(), "yellow", "green");
+	printArray(m, "Step 2 (0 in m<sub>21</sub>):<font color="red"> m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub></font>", 2, 2, m[1][1].toRecipricolFrac(), "yellow", "green");
 	
 	// Do Step 3
 	var m22 = m[1][1];
 	for( var i=0; i<m[1].length; i++ )
 		m[1][i] = m[1][i].dividedBy( m22 );
 
-	printArray(m, "Step 3 (1 in m<sub>22</sub>): r<sub>2</sub>/m<sub>22</sub> &rarr; r<sub>2</sub>", 2, 2, m[0][1].toFrac(), "green", "red");
+	printArray(m, "Step 3 (1 in m<sub>22</sub>): <font color="yellow">r<sub>2</sub>/m<sub>22</sub> &rarr; r<sub>2</sub></font>", 2, 2, m[0][1].toFrac(), "green", "red");
 	
 	// Do Step 4
 	var m12 = m[0][1];
 	for( var i=0; i<m[0].length; i++ )
 		m[0][i] = m[0][i].minus( m12.times( m[1][i] ) );
 	
-	printArray(m, "Step 4 (0 in m<sub>12</sub>): r<sub>1</sub> - m<sub>12</sub>*r<sub>2</sub> &rarr; r</sub>1</sub>", 1 );
+	printArray(m, "Step 4 (0 in m<sub>12</sub>): <font color="green">r<sub>1</sub> - m<sub>12</sub>*r<sub>2</sub> &rarr; r</sub>1</sub></font>", 1 );
 
 
 }
