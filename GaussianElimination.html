@@ -12,6 +12,11 @@ function Frac( aNum, aDenom )
 		else
 			return this.num;
 	};
+	this.toRecipricolFrac = function() { 
+		this.reduce();
+		return this.den + "/" + this.num;
+	};
+
 	this.times = function(aFrac)
 	{
 		return new Frac( this.num * aFrac.num, this.den * aFrac.den );
@@ -144,7 +149,7 @@ function calculate2x2(m)
 {
 	document.getElementById("res").innerHTML = "";
 					   
-	printArray(m, "initial matrix:",null,1,m[0][0]);
+	printArray(m, "initial matrix:",null,1,m[0][0].toRecipricolFrac());
 	
 	// Do Step 1
 	var m11 = m[0][0];
