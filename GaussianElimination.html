@@ -71,9 +71,9 @@ function printArray( anArray, msg, row, prevRow, aVal )
 	html +="<table>";
 	for( var i=0; i<anArray.length; i++ )
 	{
-		html += ("<tr><td>");
+		html += "<tr><td>";
 		if( prevRow != null && (prevRow-1) == i )
-			html += "<font color='yellow'>" + aVal + "</font></td>
+			html += "<font color='yellow'>" + aVal + "</font></td>;
 		else
 			html += "</td>";
 		
