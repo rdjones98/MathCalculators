@@ -147,17 +147,18 @@ function drawEquations()
 	for( var x = lb; x<=ub; x+=.01 )
 	{
 		var mthEqu = equ1.replace(/x/g, "(" + x + ")");
-		plotPoint(x, MathEngine.doMath(mthEqu), 0, "green");
+		plotPoint(x, MathEngine.doMath(mthEqu), 0, "blue");
 	}
 	var equ2 = document.getElementById("g").value;
 	for( var x = lb; x<=ub; x+=.01 )
 	{
 		var mthEqu = equ2.replace(/x/g, "(" + x + ")");
-		plotPoint(x, MathEngine.doMath(mthEqu), 0, "blue");
+		plotPoint(x, MathEngine.doMath(mthEqu), 0, "red");
 	}
 }
 function animate(lastX)
 {
+	plotPoint(0,0, 0, "lightblue");
 	var canvas = document.getElementById("myCanvas");
 	var ctx = canvas.getContext("2d");
 	var lb = parseInt( document.getElementById("lb").value );
@@ -212,7 +213,7 @@ function animate(lastX)
 		{
 			var mthEqu = equ3.replace(/x/g, "(" + y + ")");
 			var z = MathEngine.doMath(mthEqu);
-			plotPoint(lastX, y, z , "orange");
+			plotPoint(lastX, y, z , "lightblue");
 		}
 		plotLine(lastX, ey, 0, lastX, sy, 0);
 		
