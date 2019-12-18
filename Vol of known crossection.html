@@ -244,8 +244,8 @@ function graph()
 <h3>Equations must be entered correctly:</h3>
 &nbsp; ex:  2x must be typed as 2*x  and "x" must be lower case<br>
 &nbsp; ex:  &radic;(x-2) must be typed as (x-2)^(1/2) with () around the exponent<br><br>
-<tr><td align=right>f(x): y=</td><td><input id=f /></td></tr>
-<tr><td align=right>g(x): y=</td><td><input id=g value=0></td></tr>
+<tr><td align=right>f(x): y=</td><td><input id=f value="2*x^(1/2)"/></td></tr>
+<tr><td align=right>g(x): y=</td><td><input id=g value="1/4*x^2"></td></tr>
 <tr><td>Cross Section:</td>
 	<td><form>
 		<input type=radio name=xsect id=square checked>Square</input>
@@ -255,7 +255,7 @@ function graph()
 	</td>
 </tr>
 <tr><td align=right>Lower Bound: x=</td><td><input id=lb value=0></input></td></tr>
-<tr><td align=right>Upper Bound: x=</td><td><input id=ub value=2></input></td></tr>
+<tr><td align=right>Upper Bound: x=</td><td><input id=ub value=4></input></td></tr>
 <tr><td align=right>Scale:</td><td><input id=scale value=50></input></td></tr>
 
 <tr><td align=right>Integral:</td><td id=integral></td></tr>
