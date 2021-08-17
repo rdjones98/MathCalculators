@@ -187,13 +187,13 @@ function graph()
 &nbsp; ex:  2y must be typed as 2*y  and "y" must be lower case<br>
 &nbsp; ex:  &radic;(y-2) must be typed as (y-2)^(1/2) with () around the exponent<br><br>
 <table> 
-<tr><td align=right>f(x): x=</td><td><input id=f /></td></tr>
-<tr><td align=right>g(x): x=</td><td><input id=g /></td></tr>
+<tr><td align=right>f(y): x=</td><td><input id=f /></td></tr>
+<tr><td align=right>g(y): x=</td><td><input id=g /></td></tr>
 <tr><td align=right>Lower Bound: y=</td><td><input id=lb value=0></input></td></tr>
 <tr><td align=right>Upper Bound: y=</td><td><input id=ub value=2></input></td></tr>
 <tr><td align=right>Rotate Around x=</td><td><input id=rotateAround value=0></input></td></tr>
 <tr><td align=right>Scale:</td><td><input id=scale value=50></input></td></tr>
-<tr><td align=right>Integral:</td><td>&pi; &int; [f(x)]<sup>2</sup> - [g(x)]<sup>2</sup> dy</td></tr>
+<tr><td align=right>Integral:</td><td>&pi; &int; [f(y)]<sup>2</sup> - [g(y)]<sup>2</sup> dy</td></tr>
 <tr><td><button id=graphBtn onclick="graph();">Graph</button></td><td></td></tr>
 </table>
 <canvas style="position:absolute; top:100px; z-index:-1" id=myCanvas width=1000 height=800>
