@@ -212,17 +212,7 @@ function calculate3x3(m)
 	printArray(m, "<font color='yellow'>Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub></font>",
 		   2, 1, m[2][0].toFrac(), "yellow", "fuchsia" );
 	
-
 	// Do Step 3
-	var m31 = m[2][0];
-	for( var i=0; i<m[1].length; i++ )
-		m[2][i] = m31.times( m[0][i] ).minus(m[2][i]) ;
-	
-	printArray(m, "<font color='fuchsia'>Step 3 (0 in m<sub>31</sub>): m<sub>31</sub>*r<sub>1</sub> - r<sub>3</sub> &rarr; r<sub>3</sub></font>",
-		   3, 2, m[1][1].toRecipricolFrac(), "fuchsia", "red" );
-
-	
-	// Do Step 4
 	var m22 = m[1][1];
 	if( m22.toFrac() === 0 )
 	{
@@ -236,6 +226,16 @@ function calculate3x3(m)
 		   2, 2, m[2][1].toFrac(), "red", "yellow");
 
 	
+	// Do Step 4
+	var m31 = m[2][0];
+	for( var i=0; i<m[1].length; i++ )
+		m[2][i] = m31.times( m[0][i] ).minus(m[2][i]) ;
+	
+	printArray(m, "<font color='fuchsia'>Step 3 (0 in m<sub>31</sub>): m<sub>31</sub>*r<sub>1</sub> - r<sub>3</sub> &rarr; r<sub>3</sub></font>",
+		   3, 2, m[1][1].toRecipricolFrac(), "fuchsia", "red" );
+
+	
+
 	// Do Step 5
 	var m32 = m[2][1];
 	for( var i=0; i<m[1].length; i++ )
