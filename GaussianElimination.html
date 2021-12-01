@@ -193,7 +193,7 @@ function determinate(det, c1, a, b, c, d, c2, m, n, o, p, c3, w, x, y, z)
        	var deter =  c1*(a*d -  c*b) - c2*(m*p - o*n ) + c3*(w*z - y*x);
 	
 	html += "<table>";
-	html += "<tr><td>=</td><td>" + c1 + "(" + a + "*" + d + " - " + c + "*" + b + ") - " + c2 + "(" +m +"*" + p + " - " + o+ "*" + n + ") +" + c3 +"(" + w + "*" + z +" - " + y + "*" + x +") = " + deter + "</td></tr>";
+	html += "<tr><td>=</td><td>" + c1 + "(" + a + "*" + d + "-" + c + "*" + b + ")-" + c2 + "(" +m +"*" + p + "-" + o+ "*" + n + ")+" + c3 +"(" + w + "*" + z +"-" + y + "*" + x +")=" + deter + "</td></tr>";
 	html += "</table>";
        	document.getElementById("res").innerHTML = html;
 	   
