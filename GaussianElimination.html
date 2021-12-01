@@ -367,6 +367,28 @@ function chooseSize()
 						"<td><input id=3.6 value=1 readonly /></td>" +
 						"</tr></tbody>";
 	}
+	else if( document.getElementById('Cramer').checked ) 
+	{
+		var tbl = document.getElementById("coefficients");
+		tbl.innerHTML = "<tbody><tr>" +
+						"<td><input id=1.1 /></td>" +
+						"<td><input id=1.2 /></td>" +
+						"<td><input id=1.3 /></td>" +
+						"<td><input id=1.4 /></td>" +
+						"</tr>" +
+						"<tr>" +
+						"<td><input id=2.1 /></td>" +
+						"<td><input id=2.2 /></td>" +
+						"<td><input id=2.3 /></td>" +
+						"<td><input id=2.4 /></td>" +
+						"</tr>" +
+						"<tr>" +
+						"<td><input id=3.1 /></td>" +
+						"<td><input id=3.2 /></td>" +
+						"<td><input id=3.3 /></td>" +
+						"<td><input id=3.4 /></td>" +
+						"</tr></tbody>";
+	}
 }
 </script>
 <body>
@@ -375,6 +397,7 @@ function chooseSize()
 		<input id="2x2i" type="radio" name="size" value="2x2 Identity">2x2 Identity<br>
 		<input id="3x3" type="radio" name="size" value="3x3">3x3<br>
 		<input id="3x3i" type="radio" name="size" value="3x3 Identity">3x3 Identity<br>
+		<input id="Cramer" type="radio" name="size" value="Cramers">3x3 Cramer's Rule<br>
 	</form>
 	<div style="text-align:center;"> Enter Coefficients</div>
 	<table id=coefficients>
