@@ -158,7 +158,7 @@ function calculate()
 }
 function calculateCramer(m)
 {
-	document.getElementById("res").innerHTML = "";
+	document.getElementById("res").innerHTML = "<style>td{ text-align: left;  }</style>";
 
         var c11 = m[0][0].toFrac();
         var c12 = m[0][1].toFrac();
@@ -182,7 +182,6 @@ function calculateCramer(m)
 function determinate(det, c1, a, b, c, d, c2, m, n, o, p, c3, w, x, y, z) 
 {
 	var html = document.getElementById("res").innerHTML;
-	html += "<style>td{ text-align: left;  }</style>";
 
 	html +="<table align=left>";
        	html += "<tr><td>" + det + "</td><td>=</td><td>          </td><td>|" + a + " " + b + "|</td><td> </td><td>          </td><td>|" + m + " " + n + "|</td><td>          </td><td>|" + w + " " + x + "|</td></tr>";
