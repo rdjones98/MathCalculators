@@ -182,10 +182,9 @@ function calculateCramer(m)
 function determinate(det, c1, a, b, c, d, c2, m, n, o, p, c3, w, x, y, z) 
 {
 	var html = document.getElementById("res").innerHTML;
-//	if( html !== "undefined" )
-//		html += "<div style='text-align:center'><br>" + html +"</div>";
-		
-  	html +="<table align=left>";
+	html += "<style>td{ text-align: left;  }</style>";
+
+	html +="<table align=left>";
        	html += "<tr><td>" + det + "</td><td>=</td><td>          </td><td>|" + a + " " + b + "|</td><td> </td><td>          </td><td>|" + m + " " + n + "|</td><td>          </td><td>|" + w + " " + x + "|</td></tr>";
        	html += "<tr><td>           </td><td> </td><td> "+ c1 + "</td><td>|" + c + " " + d + "|</td><td>-</td><td>" + c2 + "</td><td>|" + o + " " + p + "|</td><td>" + c3 + "</td><td>|" + y + " " + z + "|</td></tr>";
 	html += "</table>";
