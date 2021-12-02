@@ -1,0 +1,470 @@
+<html>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script>
+function Frac( aNum, aDenom )
+{
+	this.num = aNum;
+	this.den = aDenom;
+	this.toFrac = function() { 
+		this.reduce();
+		if( this.den != 1 && this.num != 0)
+			return this.num + "/" + this.den;
+		else
+			return this.num;
+	};
+	this.toRecipricolFrac = function() { 
+		this.reduce();
+		return this.den + "/" + this.num;
+	};
+
+	this.times = function(aFrac)
+	{
+		return new Frac( this.num * aFrac.num, this.den * aFrac.den );
+	};
+	this.dividedBy = function(aFrac)
+	{
+		return new Frac( this.num * aFrac.den, this.den * aFrac.num );
+	};
+	this.reduce = function()
+	{
+		var j = Math.abs(this.den) < Math.abs(this.num) ? Math.abs(this.den): Math.abs(this.num);
+		for( var i=2; i<=j; i++)
+		{
+			while( this.num%i == 0 && this.den%i == 0)
+			{
+				this.num = this.num / i;
+				this.den = this.den / i;
+			}
+		}
+		if( this.den < 0)
+		{
+			this.den *= -1;
+			this.num *= -1;
+		}
+	};
+
+	this.minus = function(aFrac)
+	{
+		if( this.den != aFrac.den )
+		{
+			var nDen = this.den * aFrac.den;
+			var num1 = this.num * aFrac.den;
+			var num2 = this.den * aFrac.num;
+			return new Frac( num1 - num2, nDen );
+		}
+		else
+			return new Frac( this.num - aFrac.num, this.den );
+	};
+	
+}
+function v(id)
+{
+	var val = document.getElementById(id).value;
+	var idx = val.indexOf("/");
+	
+	if( idx != -1 )
+		return new Frac( val.substring(0,idx), val.substr(idx+1) );
+	else
+		return new Frac( val, 1 );
+}
+function printArray( anArray, msg, row, onesRow, aVal , aColor, aNextColor )
+{
+	if (aColor == null )
+		aColor = "white";
+	if (aNextColor == null )
+		aNextColor = "white";
+	var html = document.getElementById("res").innerHTML;
+	if( msg !== "undefined" )
+		html += "<div style='text-align:center'><br>" + msg +"</div>";
+		
+	html +="<table>";
+	for( var i=0; i<anArray.length; i++ )
+	{
+		html += "<tr><td>";
+		if( onesRow != null && (onesRow-1) == i )
+			html += "<font color='" + aNextColor + "'>" + aVal + "</font></td>";
+		else
+			html += "</td>";
+		
+		for( var j=0; j<anArray[i].length; j++ )
+		{	
+			if( j==0 )
+			{
+				if( i==0 )
+					html += "<td class='lb tb'>";
+				else if( i==anArray.length-1 )
+					html += "<td class='lb bb'>";
+				else	
+					html += "<td class=lb>";
+			}
+			else if (j==anArray[i].length-1)
+			{
+				if( i==0 )
+					html += "<td class='rb tb'>";
+				else if( i==anArray.length-1 )
+					html += "<td class='rb bb'>";
+				else
+					html += "<td class=rb>";
+			}
+			else
+				html += "<td>"
+			if( row != null & (row-1) == i )
+				html += "<font color='" + aColor + "'>" + anArray[i][j].toFrac() +"</font></td>" ;
+			else				
+				html += anArray[i][j].toFrac() +"</td>" ;
+		}
+		html += "</tr>";
+	}
+	html += "</table>";
+	document.getElementById("res").innerHTML = html;
+}
+function calculate()
+{
+	if( document.getElementById('2x2').checked )
+	{
+		var m = new Array( new Array( v("1.1"), v("1.2"), v("1.3")),
+							new Array( v("2.1"), v("2.2"), v("2.3")));
+		calculate2x2(m);
+	}
+	else if( document.getElementById('2x2i').checked )
+	{
+		var m = new Array( new Array( v("1.1"), v("1.2"), v("1.3"), v("1.4")),
+						   new Array( v("2.1"), v("2.2"), v("2.3"), v("2.4")) );
+		calculate2x2(m);
+	}
+	else if ( document.getElementById('3x3').checked )
+	{
+		var m = new Array( 	new Array( v("1.1"), v("1.2"), v("1.3"), v("1.4") ),
+							new Array( v("2.1"), v("2.2"), v("2.3"), v("2.4") ), 
+							new Array( v("3.1"), v("3.2"), v("3.3"), v("3.4") ) );
+		calculate3x3(m);
+	}
+	else if ( document.getElementById('3x3i').checked )
+	{
+		var m = new Array( 	new Array( v("1.1"), v("1.2"), v("1.3"), v("1.4"), v("1.5"), v("1.6") ),
+							new Array( v("2.1"), v("2.2"), v("2.3"), v("2.4"), v("2.5"), v("2.6") ), 
+							new Array( v("3.1"), v("3.2"), v("3.3"), v("3.4"), v("3.5"), v("3.6") ) );
+		calculate3x3(m);
+	}
+	else if ( document.getElementById('Cramer').checked )
+	{
+		var m = new Array( 	new Array( v("1.1"), v("1.2"), v("1.3"), v("1.4") ),
+							new Array( v("2.1"), v("2.2"), v("2.3"), v("2.4") ), 
+							new Array( v("3.1"), v("3.2"), v("3.3"), v("3.4") ) );
+		calculateCramer(m);
+	}
+
+	
+}
+function calculateCramer(m)
+{
+	document.getElementById("res").innerHTML = "<style>td{ text-align: right;  width: auto;}</style>";
+
+        var c11 = m[0][0].toFrac();
+        var c12 = m[0][1].toFrac();
+        var c13 = m[0][2].toFrac();
+        var c21 = m[1][0].toFrac();
+        var c22 = m[1][1].toFrac();
+        var c23 = m[1][2].toFrac();
+        var c31 = m[2][0].toFrac();
+        var c32 = m[2][1].toFrac();
+        var c33 = m[2][2].toFrac();
+        var a1  = m[0][3].toFrac();
+        var a2  = m[1][3].toFrac();
+        var a3  = m[2][3].toFrac();
+	
+	determinate("Dc", c11, c22, c23, c32, c33, c12, c21, c23, c31, c33, c13, c21, c22, c31, c32);
+        determinate("Dx", a1, c22, c23, c32, c33, c12, a2, c23, a3, c33, c13, a2, c22, a3, c32);
+        determinate("Dy", c11, a2, c23, a3, c33, a1, c21, c23, c31, c33, c13, c21, a2, c31, a3);
+        determinate("Dz", c11, c22, a2, c32, a3, c12, c21, a2, c31, a3, a1, c21, c22, c31, c32);
+ 
+}		
+function determinate(det, c1, a, b, c, d, c2, m, n, o, p, c3, w, x, y, z) 
+{
+	var html = document.getElementById("res").innerHTML;
+
+	html +="<table>";
+       	html += "<tr><td>" + det + "</td><td>=</td><td>          </td><td>|</td><td>" + a + "</td><td>&nbsp;</td><td>" + b + "</td><td>|</td><td>       </td><td>          </td><td>|</td><td>" + m + "</td><td>&nbsp;</td><td>" + n + "</td><td>|</td><td>           </td><td>|</td><td>" + w + "</td><td>&nbsp;</td><td>" + x + "</td><td>|</td></tr>";
+       	html += "<tr><td>           </td><td> </td><td> "+ c1 + "</td><td>|</td><td>" + c + "</td><td>&nbsp;</td><td>" + d + "</td><td>|</td><td>&minus;</td><td>" + c2 + "</td><td>|</td><td>" + o + "</td><td>&nbsp;</td><td>" + p + "</td><td>|</td><td>+" + c3 + "</td><td>|</td><td>" + y + "</td><td>&nbsp;</td><td>" + z + "</td><td>|</td></tr>";
+	html += "</table>";
+	
+       	var deter =  c1*(a*d -  c*b) - c2*(m*p - o*n ) + c3*(w*z - y*x);
+	
+	html += "<table align=right>";
+	html += "<tr><td>=</td><td>" + c1 + "(" + a + "&middot;" + d + " &minus; " + c + "&middot;" + b + ") &minus; " + c2 + "(" +m +"&middot;" + p + " &minus; " + o+ "&middot;" + n + ") + " + c3 +"(" + w + "&middot;" + z +" &minus; " + y + "&middot;" + x +") = " + deter + "</td></tr>";
+	html += "</table><br><br>";
+       	document.getElementById("res").innerHTML = html;
+	   
+}
+
+function calculate2x2(m)
+{
+	document.getElementById("res").innerHTML = "";
+					   
+	printArray(m, "initial matrix:",null,1,m[0][0].toRecipricolFrac(), "white", "red" );
+	
+	// Do Step 1
+	var m11 = m[0][0];
+	for( var i=0; i<m[0].length; i++ )
+		m[0][i] = m[0][i].dividedBy( m11 );
+	
+	printArray(m, "<font color='red'>Step 1 (1 in m<sub>11</sub>): r<sub>1</sub>/m<sub>11</sub> &rarr; r<sub>1</sub></font>", 
+		   1 , 1, m[1][0].toFrac(), "red", "yellow");
+
+	// Do Step 2
+	var m21 = m[1][0];
+	for( var i=0; i<m[1].length; i++ )
+		m[1][i] = m21.times( m[0][i] ).minus(m[1][i]) ;
+	
+	printArray(m, 
+		"<font color='yellow'>Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub></font>",
+		2, 2, m[1][1].toRecipricolFrac(), "yellow", "green");
+	
+	// Do Step 3
+	var m22 = m[1][1];
+	for( var i=0; i<m[1].length; i++ )
+		m[1][i] = m[1][i].dividedBy( m22 );
+
+	printArray(m, "<font color='green'>Step 3 (1 in m<sub>22</sub>): r<sub>2</sub>/m<sub>22</sub> &rarr; r<sub>2</sub></font>", 
+		   2, 2, m[0][1].toFrac(), "green", "red");
+	
+	// Do Step 4
+	var m12 = m[0][1];
+	for( var i=0; i<m[0].length; i++ )
+		m[0][i] = m[0][i].minus( m12.times( m[1][i] ) );
+	
+	printArray(m, "<font color='red'>Step 4 (0 in m<sub>12</sub>): r<sub>1</sub> - m<sub>12</sub>*r<sub>2</sub> &rarr; r</sub>1</sub></font>",
+		   1,1, "","red","red" );
+
+
+}
+function calculate3x3(m)
+{
+	document.getElementById("res").innerHTML = "";
+					   
+	printArray(m, "initial matrix:",null, 1, m[0][0].toRecipricolFrac(), "white", "red");
+	
+	// Do Step 1
+	var m11 = m[0][0];
+	for( var i=0; i<m[0].length; i++ )
+		m[0][i] = m[0][i].dividedBy( m11 );
+	
+	printArray(m, "<font color='red'>Step 1 (1 in m<sub>11</sub>): r<sub>1</sub>/m<sub>11</sub> &rarr; r<sub>1</sub></font>",
+		   1 , 1, m[1][0].toFrac(), "red", "yellow");
+
+	// Do Step 2
+	var m21 = m[1][0];
+	for( var i=0; i<m[1].length; i++ )
+		m[1][i] = m21.times( m[0][i] ).minus(m[1][i]) ;
+	
+	printArray(m, "<font color='yellow'>Step 2 (0 in m<sub>21</sub>): m<sub>21</sub>*r<sub>1</sub> - r<sub>2</sub> &rarr; r<sub>2</sub></font>",
+		   2, 1, m[2][0].toFrac(), "yellow", "fuchsia" );
+	
+	// Do Step 3
+	var m22 = m[1][1];
+	if( m22.toFrac() === 0 )
+	{
+		alert("0 in Row 2, Col 2.  Can't continue.  You could try rearranging the rows");
+		return;
+	}
+	for( var i=0; i<m[1].length; i++ )
+		m[1][i] = m[1][i].dividedBy( m22 );
+
+	printArray(m, "<font color='fuchsia'>Step 3 (1 in m<sub>22</sub>): r<sub>2</sub>/m<sub>22</sub> &rarr; r<sub>2</sub></font>" ,
+		   2, 2, m[2][1].toFrac(), "fuchsia", "red");
+
+	
+	// Do Step 4
+	var m31 = m[2][0];
+	for( var i=0; i<m[1].length; i++ )
+		m[2][i] = m31.times( m[0][i] ).minus(m[2][i]) ;
+	
+	printArray(m, "<font color='red'>Step 4 (0 in m<sub>31</sub>): m<sub>31</sub>*r<sub>1</sub> - r<sub>3</sub> &rarr; r<sub>3</sub></font>",
+		   3, 2, m[1][1].toRecipricolFrac(), "red", "yellow" );
+
+	
+
+	// Do Step 5
+	var m32 = m[2][1];
+	for( var i=0; i<m[1].length; i++ )
+		m[2][i] = m32.times( m[1][i] ).minus(m[2][i]) ;
+	
+	printArray(m, "<font color='yellow'>Step 5 (0 in m<sub>32</sub>): m<sub>32</sub>*r<sub>2</sub> - r<sub>3</sub> &rarr; r<sub>3</sub></font>",
+		   3, 2,  m[0][1].toFrac(), "yellow", "fuchsia");
+
+	
+	// Do Step 6
+	var m33 = m[2][2];
+	if( m33.toFrac() === 0 )
+	{
+		alert("0 in Row 3, Col 3.  Can't continue.  You could try rearranging the rows");
+		return;
+	}
+	for( var i=0; i<m[2].length; i++ )
+		m[2][i] = m[2][i].dividedBy( m33 );
+
+	printArray(m, "<font color='fuchsia'>Step 6 (1 in m<sub>33</sub>): r<sub>3</sub>/m<sub>33</sub> &rarr; r<sub>3</sub></font>" ,
+		   3, 3,m[1][2].toFrac(), "fuchsia", "red" );
+
+	// Do Step 7
+	var m23 = m[1][2];
+	for( var i=0; i<m[2].length; i++ )
+		m[1][i] = m[1][i].minus( m23.times( m[2][i] ) );
+	
+	printArray(m, 
+	    "<font color=red>Step 7 (0 in m<sub>23</sub>): r<sub>2</sub> - m<sub>23</sub>*r<sub>3</sub> &rarr; r<sub>2</sub></font>",
+		   2 , 3, m[0][2].toFrac(), "red", "yellow");
+
+	// Do Step 8
+	var m12 = m[0][1];
+	for( var i=0; i<m[0].length; i++ )
+		m[0][i] = m[0][i].minus( m12.times( m[1][i] ) );
+	
+	printArray(m, "<font color='yellow'>Step 8 (0 in m<sub>12</sub>): r<sub>1</sub> - m<sub>12</sub>*r<sub>2</sub> &rarr; r<sub>1</sub></font>",
+		   1, 3, m[2][2].toRecipricolFrac(), "yellow", "fuchsia" );
+
+	// Do Step 9
+	var m13 = m[0][2];
+	for( var i=0; i<m[0].length; i++ )
+		m[0][i] = m[0][i].minus( m13.times( m[2][i] ) ) ;
+	
+	printArray(m, 
+	   "<font color=fuchsia>Step 9 (0 in m<sub>13</sub>): r<sub>1</sub> - m<sub>13</sub>*r<sub>3</sub> &rarr; r<sub>1</sub></font>",
+		   1,1, "","fuchsia","fuchsia" );
+}
+function chooseSize()
+{
+	document.getElementById("res").innerHTML="";
+	if( document.getElementById('2x2').checked )
+	{
+		var tbl = document.getElementById("coefficients");
+		tbl.innerHTML = "<tbody><tr>" +
+						"<td><input id=1.1 /></td>" +
+						"<td><input id=1.2 /></td>" +
+						"<td><input id=1.3 /></td>" +
+						"</tr>" +
+						"<tr>" +
+						"<td><input id=2.1 /></td>" +
+						"<td><input id=2.2 /></td>" +
+						"<td><input id=2.3 /></td>" +
+						"</tr></tbody>";
+	}
+	if( document.getElementById('2x2i').checked )
+	{
+		var tbl = document.getElementById("coefficients");
+		tbl.innerHTML = "<tbody><tr>" +
+						"<td><input id=1.1 /></td>" +
+						"<td><input id=1.2 /></td>" +
+						"<td><input value=1 readonly id=1.3 /></td>" +
+						"<td><input value=0 readonly id=1.4 /></td>" +
+						"</tr>" +
+						"<tr>" +
+						"<td><input id=2.1 /></td>" +
+						"<td><input id=2.2 /></td>" +
+						"<td><input value=0 readonly id=2.3 /></td>" +
+						"<td><input value=1 readonly id=2.4 /></td>" +
+						"</tr></tbody>";
+	}
+	else if( document.getElementById('3x3').checked ) 
+	{
+		var tbl = document.getElementById("coefficients");
+		tbl.innerHTML = "<tbody><tr>" +
+						"<td><input id=1.1 /></td>" +
+						"<td><input id=1.2 /></td>" +
+						"<td><input id=1.3 /></td>" +
+						"<td><input id=1.4 /></td>" +
+						"</tr>" +
+						"<tr>" +
+						"<td><input id=2.1 /></td>" +
+						"<td><input id=2.2 /></td>" +
+						"<td><input id=2.3 /></td>" +
+						"<td><input id=2.4 /></td>" +
+						"</tr>" +
+						"<tr>" +
+						"<td><input id=3.1 /></td>" +
+						"<td><input id=3.2 /></td>" +
+						"<td><input id=3.3 /></td>" +
+						"<td><input id=3.4 /></td>" +
+						"</tr></tbody>";
+	}
+	else if( document.getElementById('3x3i').checked ) 
+	{
+		var tbl = document.getElementById("coefficients");
+		tbl.innerHTML = "<tbody><tr>" +
+						"<td><input id=1.1 /></td>" +
+						"<td><input id=1.2 /></td>" +
+						"<td><input id=1.3 /></td>" +
+						"<td><input id=1.4 value=1 readonly /></td>" +
+						"<td><input id=1.5 value=0 readonly /></td>" +
+						"<td><input id=1.6 value=0 readonly /></td>" +
+						"</tr>" +
+						"<tr>" +
+						"<td><input id=2.1 /></td>" +
+						"<td><input id=2.2 /></td>" +
+						"<td><input id=2.3 /></td>" +
+						"<td><input id=2.4 value=0 readonly /></td>" +
+						"<td><input id=2.5 value=1 readonly /></td>" +
+						"<td><input id=2.6 value=0 readonly /></td>" +
+						"</tr>" +
+						"<tr>" +
+						"<td><input id=3.1 /></td>" +
+						"<td><input id=3.2 /></td>" +
+						"<td><input id=3.3 /></td>" +
+						"<td><input id=3.4 value=0 readonly /></td>" +
+						"<td><input id=3.5 value=0 readonly /></td>" +
+						"<td><input id=3.6 value=1 readonly /></td>" +
+						"</tr></tbody>";
+	}
+	else if( document.getElementById('Cramer').checked ) 
+	{
+		var tbl = document.getElementById("coefficients");
+		tbl.innerHTML = "<tbody><tr>" +
+						"<td><input id=1.1 /></td>" +
+						"<td><input id=1.2 /></td>" +
+						"<td><input id=1.3 /></td>" +
+						"<td><input id=1.4 /></td>" +
+						"</tr>" +
+						"<tr>" +
+						"<td><input id=2.1 /></td>" +
+						"<td><input id=2.2 /></td>" +
+						"<td><input id=2.3 /></td>" +
+						"<td><input id=2.4 /></td>" +
+						"</tr>" +
+						"<tr>" +
+						"<td><input id=3.1 /></td>" +
+						"<td><input id=3.2 /></td>" +
+						"<td><input id=3.3 /></td>" +
+						"<td><input id=3.4 /></td>" +
+						"</tr></tbody>";
+	}
+}
+</script>
+<body>
+	<form  onClick="chooseSize();">
+		<input id="2x2" type="radio" name="size" value="2x2" checked>2x2<br>
+		<input id="2x2i" type="radio" name="size" value="2x2 Identity">2x2 Identity<br>
+		<input id="3x3" type="radio" name="size" value="3x3">3x3<br>
+		<input id="3x3i" type="radio" name="size" value="3x3 Identity">3x3 Identity<br>
+		<input id="Cramer" type="radio" name="size" value="Cramers">3x3 Cramer's Rule<br>
+	</form>
+	<div style="text-align:center;"> Enter Coefficients</div>
+	<table id=coefficients>
+	<tr>
+		<td><input id=1.1 /></td>
+		<td><input id=1.2 /></td>
+		<td><input id=1.3 /></td>
+	</tr>
+	<tr>
+		<td><input id=2.1 /></td>
+		<td><input id=2.2 /></td>
+		<td><input id=2.3 /></td>
+	</tr>
+	</table>
+	<table>
+	<tr>
+		<td><button onClick="calculate();">Calculate</button></td>
+	</tr>
+	</table>
+	<div id=res></div>
+</body>
+</html>
