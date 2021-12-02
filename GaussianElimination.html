@@ -184,13 +184,13 @@ function determinate(det, c1, a, b, c, d, c2, m, n, o, p, c3, w, x, y, z)
 	var html = document.getElementById("res").innerHTML;
 
 	html +="<table>";
-       	html += "<tr><td>" + det + "</td><td>=</td><td>          </td><td>|" + a + " " + b + "|</td><td> </td><td>          </td><td>|" + m + " " + n + "|</td><td>           </td><td>|" + w + " " + x + "|</td></tr>";
-       	html += "<tr><td>           </td><td> </td><td> "+ c1 + "</td><td>|" + c + " " + d + "|</td><td>-</td><td>" + c2 + "</td><td>|" + o + " " + p + "|</td><td>+" + c3 + "</td><td>|" + y + " " + z + "|</td></tr>";
+       	html += "<tr><td>" + det + "</td><td>=</td><td>          </td><td>|</td><td>" + a + " " + b + "</td><td>|</td><td> </td><td>          </td><td>|</td><td>" + m + " " + n + "</td><td>|</td><td>           </td><td>|</td><td>" + w + " " + x + "</td><td>|</td></tr>";
+       	html += "<tr><td>           </td><td> </td><td> "+ c1 + "</td><td>|</td><td>" + c + " " + d + "</td><td>|</td><td>-</td><td>" + c2 + "</td><td>|</td><td>" + o + " " + p + "</td><td>|</td><td>+" + c3 + "</td><td>|</td><td>" + y + " " + z + "</td><td>|</td></tr>";
 	html += "</table>";
 	
        	var deter =  c1*(a*d -  c*b) - c2*(m*p - o*n ) + c3*(w*z - y*x);
 	
-	html += "<table align=left>";
+	html += "<table align=right>";
 	html += "<tr><td>=</td><td>" + c1 + "(" + a + "*" + d + "-" + c + "*" + b + ")-" + c2 + "(" +m +"*" + p + "-" + o+ "*" + n + ")+" + c3 +"(" + w + "*" + z +"-" + y + "*" + x +")=" + deter + "</td></tr>";
 	html += "</table><br><br>";
        	document.getElementById("res").innerHTML = html;
