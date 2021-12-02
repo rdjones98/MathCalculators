@@ -184,8 +184,8 @@ function determinate(det, c1, a, b, c, d, c2, m, n, o, p, c3, w, x, y, z)
 	var html = document.getElementById("res").innerHTML;
 
 	html +="<table>";
-       	html += "<tr><td>" + det + "</td><td>=</td><td>          </td><td>|</td><td>" + a + "</td><td>&nbsp;</td><td>" + b + "</td><td>|</td><td> </td><td>          </td><td>|</td><td>" + m + "</td><td>&nbsp;</td><td>" + n + "</td><td>|</td><td>           </td><td>|</td><td>" + w + "</td><td>&nbsp;</td><td>" + x + "</td><td>|</td></tr>";
-       	html += "<tr><td>           </td><td> </td><td> "+ c1 + "</td><td>|</td><td>" + c + "</td><td>&nbsp;</td><td>" + d + "</td><td>|</td><td>-</td><td>" + c2 + "</td><td>|</td><td>" + o + "</td><td>&nbsp;</td><td>" + p + "</td><td>|</td><td>+" + c3 + "</td><td>|</td><td>" + y + "</td><td>&nbsp;</td><td>" + z + "</td><td>|</td></tr>";
+       	html += "<tr><td>" + det + "</td><td>=</td><td>          </td><td>|</td><td>" + a + "</td><td>&nbsp;</td><td>" + b + "</td><td>|</td><td>       </td><td>          </td><td>|</td><td>" + m + "</td><td>&nbsp;</td><td>" + n + "</td><td>|</td><td>           </td><td>|</td><td>" + w + "</td><td>&nbsp;</td><td>" + x + "</td><td>|</td></tr>";
+       	html += "<tr><td>           </td><td> </td><td> "+ c1 + "</td><td>|</td><td>" + c + "</td><td>&nbsp;</td><td>" + d + "</td><td>|</td><td>&minus;</td><td>" + c2 + "</td><td>|</td><td>" + o + "</td><td>&nbsp;</td><td>" + p + "</td><td>|</td><td>+" + c3 + "</td><td>|</td><td>" + y + "</td><td>&nbsp;</td><td>" + z + "</td><td>|</td></tr>";
 	html += "</table>";
 	
        	var deter =  c1*(a*d -  c*b) - c2*(m*p - o*n ) + c3*(w*z - y*x);
