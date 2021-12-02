@@ -4,6 +4,7 @@
 		color : white;
 		background-image: url('ChalkBoard.jpg');
 		background-size:cover;
+		opacity: .4; 
 		
 	}
 	input {
