@@ -6,7 +6,7 @@
 	body::before {
 		background-image: url('ChalkBoard.jpg');
 		background-size:cover;
-		opacity: .4; 
+		opacity: .9; 
 	}
 	input {
 		width: 150px;
