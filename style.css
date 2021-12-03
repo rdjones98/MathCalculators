@@ -2,10 +2,11 @@
 		font-family : "Trebuchet MS", Helvetica, sans-serif;
 		font-size: 36px;
 		color : white;
+	}
+	body::before {
 		background-image: url('ChalkBoard.jpg');
 		background-size:cover;
 		opacity: .4; 
-		
 	}
 	input {
 		width: 150px;
