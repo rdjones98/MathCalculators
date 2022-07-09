@@ -4,7 +4,7 @@
 	var YORIGIN=250;
 	var CWIDTH=400;
 	var CHEIGHT=300;
-
+	var STICKMANLEFT=455;
 	var curFunc = 0;
 	
 	function init()
@@ -32,6 +32,10 @@
 		var c2 = document.getElementById("integralGraph");
 		var ctx2 = c2.getContext("2d");
 		drawAxis(ctx2, YORIGIN);
+
+		document.getElementById("res").value=0;
+		document.getElementById("areaundercurve").innerHTML="Area under the curve: 0";
+		document.getElementById("stickman").style.left=STICKMANLEFT;
 	}
 	
 	function getY( x )
@@ -82,6 +86,26 @@
 			ctx.rect(0,idx,5,1);
 			ctx.stroke();
 		}
+		
+		// Draw Stickman Axis
+		var c = document.getElementById("stickManGraph");
+		var ctx = c.getContext("2d");
+		ctx.clearRect(0,0,CWIDTH, CHEIGHT);
+		ctx.lineWidth = 1;
+		
+		ctx.strokeStyle='black';
+		// x-axis
+		ctx.beginPath();
+		ctx.moveTo(0, 5);
+		ctx.lineTo(2*CWIDTH, 5);
+		ctx.stroke();
+		for(var idx=SCALE; idx<=2*CWIDTH; idx+=SCALE)
+		{
+			ctx.rect(idx,0,1,10);
+			ctx.stroke();
+		}
+		
+		
 	}
 	function showVal(val)
 	{
@@ -132,40 +156,59 @@
 		ctx.strokeStyle='red';
 		ctx.arc(x, YORIGIN + lastVal, 5, 0, 2*Math.PI);
 		ctx.fill();
-		document.getElementById("res").value=lastVal/SCALE*-1;
-
+		value=lastVal/SCALE*-1;
+		document.getElementById("integralY").style.left=490+x;
+		document.getElementById("integralY").style.top=315+YORIGIN + lastVal;
+		document.getElementById("integralY").innerHTML="y=" + value;
+		document.getElementById("res").value=value;
+		document.getElementById("areaundercurve").innerHTML="Area under the curve: " + (lastVal/SCALE*-1);
+		document.getElementById("stickman").style.left=STICKMANLEFT + -1*lastVal;
+		document.getElementById("stickmanX").style.left=STICKMANLEFT + -1*lastVal + 35;
+		document.getElementById("stickmanX").innerHTML="x=" + (lastVal/SCALE*-1);
 	}
 </script>
 <body>
-	<img src=images/integral.jpg>
-	<!--Slider -->
-	<div style="position: absolute; top:5px; left:55px">
+	<h1>Integral Visualizer</h1>
+	<!-- Integral Sign image -->
+	<img src=images/Integral.jpg style="position: absolute; top:105px; left:5px"></img>
+	
+	<!--Slider in the upper part of the Integral sign and 0 in the bottom part of the integral sign-->
+	<div style="position: absolute; top:105px; left:55px">
 	  <label for="x-coord">x=</label>
-	  <input type="number" id="x-coord" name="x-coord" min="0" max="80" value="0" oninput="showVal(this.value)" onchange="showVal(this.value)">
+	  <input type="number" id="x-coord" name="x-coord" min="0" max="80" value="0" style="width:40px;" oninput="showVal(this.value);" onchange="showVal(this.value);">
+	</div>
+	<div style="position: absolute; top:165px; left:45px">
+		x=0
 	</div>
 
-	<div style="position: absolute; top:30px; left:90px; font-size:30px;"><i>
+	<!-- Function to integrate drop-down -->
+	<div style="position: absolute; top:130px; left:90px; font-size:30px;"><i>
 		<label for="function">f(x)=</label>
 		<select name="function" id="function" style="font-size:30px;" onchange="functionChanged(this);">
 		  <option value="0">1/2x</option>
 		  <option value="1">x^2 - 6x + 6</option>
 		  <option value="2">5cos(x)</option>
 		</select>
-		= <input id=res value=0 style="font-size:30px;width:70px"></input>
+		= <input id=res value=0 style="font-size:30px;width:75px; border:none"></input>
 	</div>
-	<div style="position: absolute; top:65px; left:45px">
-		x=0
-	</div>
-	<br>
-	<canvas id="vGraph" width="400" height="300" style="position: absolute; top: 10px; left:470px; border:1px solid #000000;">
-	</canvas>
-
 	
-	<canvas id="integralGraph" width="400" height="300" style="position: absolute; top: 400px; left:470px; border:1px solid #000000;">
-	</canvas>
+	<!-- Function to integrate canvas for graphing and labels for f(x) and area under the curve -->
+	<canvas id="vGraph" width="400" height="300" style="position: absolute; top: 10px; left:470px; border:1px solid #000000;"></canvas>
+	<div style="position: absolute; top: 20px; left:490px;">f(x)</div>
+	<div id="areaundercurve" style="position: absolute; top: 280px; left:490px;">Area under the curve: 0</div>
 
-	<img src=images/stickman.png style="position: absolute; top:80px;left: 400px">
+	<!-- Integral canvas and labels for F(X) -->
+	<canvas id="integralGraph" width="400" height="300" style="position: absolute; top: 325px; left:470px; border:1px solid #000000;"></canvas>
+	<div id = "integralY" style="position: absolute; top: 435px; left:480px;">y=</div>
+	<div style="position: absolute; top: 335px; left:480px;">F(x)&nbsp;=&nbsp;<b>&int;&nbsp;</b>f(x)</div>
 	
+	<!-- Stickman -->
+	<div style="position: absolute; top: 635px; left:70px;">Particle Motion:</div>
+	<canvas id="stickManGraph" width="800" height="10" style="position: absolute; top: 680px; left:70px; border:0px solid #000000;">
+	</canvas>
+	<img id="stickman" src=images/stickman.png style="position: absolute; top:635px;left: 455px">
+	<div id="stickmanX" style="position: absolute; top:635px;left: 485px">x=0</div>
+	<div style="position: absolute; top: 690px; left:470px;">0</div>
 	<script>
 		var c = document.getElementById("vGraph");
 		var ctx = c.getContext("2d");
