@@ -1,0 +1,180 @@
+<html>
+<script>
+	var SCALE = 20;
+	var YORIGIN=250;
+	var CWIDTH=400;
+	var CHEIGHT=300;
+
+	var curFunc = 0;
+	
+	function init()
+	{
+		var c = document.getElementById("vGraph");
+	}
+	function functionChanged(field)
+	{
+		document.getElementById("x-coord").value=0;
+
+		curFunc = field.options[field.selectedIndex].value;
+		
+		if( curFunc == 0 )
+			YORIGIN = 250;
+		else if (curFunc == 1 )
+			YORIGIN = 200;
+		else
+			YORIGIN = 150;
+		
+		var c = document.getElementById("vGraph");
+		var ctx = c.getContext("2d");
+		drawAxis(ctx, YORIGIN);
+		graphFunc(ctx);
+
+		var c2 = document.getElementById("integralGraph");
+		var ctx2 = c2.getContext("2d");
+		drawAxis(ctx2, YORIGIN);
+	}
+	
+	function getY( x )
+	{
+		if( curFunc == 0)
+			return -1/2*x*SCALE;
+		else if( curFunc == 1)
+			return -(x*x-6*x+6)*SCALE ;
+		else if( curFunc == 2 )
+			return -5*Math.cos(x)*SCALE;
+	}
+	function getIntY( x )
+	{
+		if ( curFunc == 0 )
+			return -1/2 * x * x / 2*SCALE;
+		else if( curFunc == 1)
+			return -(x*x*x/3-6*x*x/2+6*x)*SCALE ;
+		else if( curFunc == 2 )
+			return -5*Math.sin(x)*SCALE;
+	}
+	function drawAxis( ctx)
+	{    
+		ctx.clearRect(0,0,CWIDTH, CHEIGHT);
+		ctx.lineWidth = 1;
+		
+		ctx.strokeStyle='black';
+		// x-axis
+		ctx.beginPath();
+		ctx.moveTo(0, YORIGIN);
+		ctx.lineTo(CWIDTH, YORIGIN);
+		ctx.stroke();
+		for(var idx=SCALE; idx<=CWIDTH; idx+=SCALE)
+		{
+			ctx.rect(idx,YORIGIN-5,1,10);
+			ctx.stroke();
+		}
+		// y-axis
+		ctx.moveTo(0, 0);
+		ctx.lineTo(0, CHEIGHT);
+		ctx.stroke();
+		for(var idx=YORIGIN; idx<=CHEIGHT; idx+=SCALE)
+		{
+			ctx.rect(0,idx,5,1);
+			ctx.stroke();
+		}
+		for(var idx=YORIGIN; idx>0; idx-=SCALE)
+		{
+			ctx.rect(0,idx,5,1);
+			ctx.stroke();
+		}
+	}
+	function showVal(val)
+	{
+		var c = document.getElementById("vGraph");
+		var ctx = c.getContext("2d");
+		drawAxis(ctx, YORIGIN);
+		graphFunc(ctx);
+		shadeFunc(ctx, val*SCALE);
+		plotIntegral(val*SCALE);
+	}
+	function graphFunc(ctx)
+	{
+		for(var idx=0; idx<=CWIDTH; idx++)
+		{
+			var y = getY(idx/SCALE);
+			ctx.rect(idx,YORIGIN + y,1,5);
+			ctx.stroke();
+		}
+	}
+	function shadeFunc(ctx, x)
+	{
+		for(var idx=0; idx<=x; idx++)
+		{
+		    ctx.beginPath();
+			var y = getY(idx/SCALE);
+			if( y > 0 )
+				ctx.strokeStyle = 'red';
+			else
+				ctx.strokeStyle = 'blue';
+			ctx.rect(idx,YORIGIN,1,y);
+			ctx.stroke();
+		}
+		ctx.strokeStyle = 'black';
+	}
+	function plotIntegral( x )
+	{
+		var c = document.getElementById("integralGraph");
+		var ctx = c.getContext("2d");
+		ctx.strokeStyle='black';
+		for(var idx=0; idx<=x; idx++)
+		{
+		    ctx.beginPath();
+			var y = getIntY(idx/SCALE);
+			ctx.rect(idx,YORIGIN + y,1,5);
+			ctx.stroke();
+		}
+		var lastVal = getIntY(x/SCALE);
+		ctx.strokeStyle='red';
+		ctx.arc(x, YORIGIN + lastVal, 5, 0, 2*Math.PI);
+		ctx.fill();
+		document.getElementById("res").value=lastVal/SCALE*-1;
+
+	}
+</script>
+<body>
+	<img src=images/integral.jpg>
+	<!--Slider -->
+	<div style="position: absolute; top:5px; left:55px">
+	  <label for="x-coord">x=</label>
+	  <input type="number" id="x-coord" name="x-coord" min="0" max="80" value="0" oninput="showVal(this.value)" onchange="showVal(this.value)">
+	</div>
+
+	<div style="position: absolute; top:30px; left:90px; font-size:30px;"><i>
+		<label for="function">f(x)=</label>
+		<select name="function" id="function" style="font-size:30px;" onchange="functionChanged(this);">
+		  <option value="0">1/2x</option>
+		  <option value="1">x^2 - 6x + 6</option>
+		  <option value="2">5cos(x)</option>
+		</select>
+		= <input id=res value=0 style="font-size:30px;width:70px"></input>
+	</div>
+	<div style="position: absolute; top:65px; left:45px">
+		x=0
+	</div>
+	<br>
+	<canvas id="vGraph" width="400" height="300" style="position: absolute; top: 10px; left:470px; border:1px solid #000000;">
+	</canvas>
+
+	
+	<canvas id="integralGraph" width="400" height="300" style="position: absolute; top: 400px; left:470px; border:1px solid #000000;">
+	</canvas>
+
+	<img src=images/stickman.png style="position: absolute; top:80px;left: 400px">
+	
+	<script>
+		var c = document.getElementById("vGraph");
+		var ctx = c.getContext("2d");
+		drawAxis(ctx);
+		graphFunc(ctx);
+
+		var c2 = document.getElementById("integralGraph");
+		var ctx2 = c2.getContext("2d");
+		drawAxis(ctx2);
+	</script>
+</body>
+</html>
