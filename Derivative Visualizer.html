@@ -1,0 +1,210 @@
+<html>
+<script>
+	var SCALE = 20;
+	var YORIGIN =250;
+	var Y2ORIGIN=150;
+	var CWIDTH=400;
+	var CHEIGHT=300;
+	var curFunc = 0;
+
+	function getY( x )
+	{
+		if ( curFunc == 0 )
+			return -1* (x-3) * (x-3) *SCALE;
+		else if( curFunc == 1)
+			return -.1*(x*x*x*x - 16*x*x*x + 86*x*x - 176*x + 105 )*SCALE ;//-.2*(x-1)*(x-3)*(x-5)*(x-7)*SCALE ;
+		else if( curFunc == 2 )
+			return -5*Math.sin(x)*SCALE;
+	}
+	function get1stDerivY( x )
+	{
+		if( curFunc == 0)
+			return -2*(x-3)*SCALE;
+		else if( curFunc == 1)
+			return -.1*(4*x*x*x - 48*x*x + 172*x - 176 )*SCALE ;
+		else if( curFunc == 2 )
+			return -5*Math.cos(x)*SCALE;
+	}
+
+	function drawAxis( ctx, yOrigin )
+	{    
+		ctx.clearRect(0,0,CWIDTH, CHEIGHT);
+		ctx.lineWidth = 1;
+		
+		ctx.strokeStyle='black';
+		// x-axis
+		ctx.beginPath();
+		ctx.moveTo(0, yOrigin);
+		ctx.lineTo(CWIDTH, yOrigin);
+		ctx.stroke();
+		for(var idx=SCALE; idx<=CWIDTH; idx+=SCALE)
+		{
+			ctx.rect(idx,yOrigin-5,1,10);
+			ctx.stroke();
+		}
+		// y-axis
+		ctx.moveTo(0, 0);
+		ctx.lineTo(0, CHEIGHT);
+		ctx.stroke();
+		for(var idx=yOrigin; idx<=CHEIGHT; idx+=SCALE)
+		{
+			ctx.rect(0,idx,5,1);
+			ctx.stroke();
+		}
+		for(var idx=yOrigin; idx>0; idx-=SCALE)
+		{
+			ctx.rect(0,idx,5,1);
+			ctx.stroke();
+		}
+	}
+	
+	function graphFunc(ctx)
+	{
+		ctx.beginPath();
+		ctx.moveTo(0, getY(0));
+		for(var idx=0; idx<=CWIDTH; idx++)
+		{
+			var y = getY(idx/SCALE);
+			ctx.lineTo(idx,YORIGIN + y);
+		}
+		ctx.stroke();
+	}
+	function showVal(val)
+	{
+		var c = document.getElementById("fGraph");
+		var ctx = c.getContext("2d");
+		drawAxis(ctx, YORIGIN);
+		graphFunc(ctx);
+		plot1stDeriv(val*SCALE);
+	}
+	function plot1stDeriv( x )
+	{
+		var c = document.getElementById("1stDerivGraph");
+		var ctx = c.getContext("2d");
+		ctx.strokeStyle='blue';
+		ctx.beginPath();
+		ctx.moveTo(0, get1stDerivY(0));
+		for(var idx=0; idx<=x; idx++)
+		{
+			var y = get1stDerivY(idx/SCALE);
+			ctx.lineTo(idx,Y2ORIGIN + y);
+		}
+		ctx.stroke();
+		
+		ctx.beginPath();
+		var lastVal = get1stDerivY(x/SCALE);
+		ctx.strokeStyle='red';
+		ctx.arc(x, Y2ORIGIN + lastVal, 3, 0, 2*Math.PI);
+		ctx.fill();
+
+		var yCoord = 315+Y2ORIGIN + lastVal;
+		if( yCoord > 460 && yCoord < 470 )
+			yCoord = 450;
+		document.getElementById("1stDerivY").style.left=610+x;
+		document.getElementById("1stDerivY").style.top=yCoord;
+		document.getElementById("1stDerivY").innerHTML="y=" + lastVal/SCALE*-1;
+		document.getElementById("res").value=lastVal/SCALE*-1;
+
+		
+		// Draw Slope Field
+		var c = document.getElementById("fGraph");
+		var ctx = c.getContext("2d");
+		ctx.strokeStyle='red';
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+		var fY = getY(x/SCALE)
+		ctx.moveTo(x, YORIGIN+fY);
+		ctx.lineTo(x+SCALE, YORIGIN + fY + lastVal);
+		ctx.lineTo(x-SCALE, YORIGIN + fY - lastVal);
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.arc(x, YORIGIN + fY, 3, 0, 2*Math.PI);
+		ctx.fill();
+		
+		if( fY <= 10 && fY >= -10 )
+			fY = -20;
+		document.getElementById("slope").style.left=610+x;
+		document.getElementById("slope").style.top=YORIGIN + fY;
+		document.getElementById("slope").innerHTML="m=" + lastVal/SCALE*-1;
+
+	}
+	function functionChanged(field)
+	{
+//		document.getElementById("x-coord").value=0;
+
+		curFunc = field.options[field.selectedIndex].value;
+		
+		if( curFunc == 0 )
+			YORIGIN = 250;
+		else if (curFunc == 1 )
+			YORIGIN = 150;
+		else
+			YORIGIN = 150;
+		
+		var c = document.getElementById("fGraph");
+		var ctx = c.getContext("2d");
+		drawAxis(ctx, YORIGIN);
+		graphFunc(ctx);
+
+		var c2 = document.getElementById("1stDerivGraph");
+		var ctx2 = c2.getContext("2d");
+		drawAxis(ctx2, Y2ORIGIN);
+
+		document.getElementById("x-coord").value=-1;
+		document.getElementById("res").value="";
+		document.getElementById("slope").innerHTML="";
+		document.getElementById("1stDerivY").innerHTML="";
+	}
+
+</script>
+<body>
+	<h1>Derivative Visualizer</h1>
+
+	<!-- Integral Sign image -->
+	<img src=images/derivative.jpg style="position: absolute; top:105px; left:5px"></img>
+
+	<!-- Function to Derive drop-down -->
+	<div style="position: absolute; top:140px; left:70px; font-size:30px;"><i>
+		<select name="function" id="function" style="font-size:30px;" onchange="functionChanged(this);">
+		  <option value="0">(x-3)&#178;</option>
+		  <option value="1">.1(x&#8308;-16x&#179;+86x&#178-176x+105</option>
+		  <option value="2">5sin(x)</option>
+		</select>
+	</div>
+
+	<!--Slider in the lower right part of the Derivative -->
+	<img src=images/verticalline.jpg style="position: absolute; top:105px; left:440px"></img>
+	<div style="position: absolute; top:180px; left:455px">
+	  <label for="x-coord">x=</label>
+	  <input type="number" id="x-coord" name="x-coord" min="0" max="80" value="-1" style="width:80px;" oninput="showVal(this.value);" onchange="showVal(this.value);">
+	</div>
+	<div style="position: absolute; top:140px; left:485px; font-size:30px;">
+		= <input id=res style="font-size:30px;width:75px; border:none"></input>
+	</div>
+	
+	<!-- Parent Function canvas for graphing and labels for f(x) and slope -->
+	<canvas id="fGraph" width="400" height="300" style="position: absolute; top: 10px; left:600px; border:1px solid #000000;"></canvas>
+	<div style="position: absolute; top: 20px; left:620px;">f(x)</div>
+	<div id="slope" style="position: absolute; top: -300px; left:620px;">m=</div>
+
+	<!-- 1st Deriv canvas and labels for F(X) -->
+	<canvas id="1stDerivGraph" width="400" height="300" style="position: absolute; top: 325px; left:600px; border:1px solid #000000;"></canvas>
+	<div id = "1stDerivY" style="position: absolute; top: -435px; left:610px;">y=</div>
+	<div style="position: absolute; top: 335px; left:610px;">f&nbsp;'(x)</div>
+
+	<script>
+		var c = document.getElementById("fGraph");
+		var ctx = c.getContext("2d");
+		drawAxis(ctx,YORIGIN);
+		graphFunc(ctx);
+		
+		var c2 = document.getElementById("1stDerivGraph");
+		var ctx2 = c2.getContext("2d");
+		drawAxis(ctx2,Y2ORIGIN);
+
+	</script>
+	
+
+
+</body>
+</html>	
